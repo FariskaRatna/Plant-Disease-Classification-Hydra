@@ -19,14 +19,6 @@ class PlantDataModule(LightningDataModule):
         num_workers: int = 0,
         pin_memory: bool = False,
     ) -> None:
-        """Initialize a `MNISTDataModule`.
-
-        :param data_dir: The data directory. Defaults to `"data/"`.
-        :param train_val_test_split: The train, validation and test split. Defaults to `(55_000, 5_000, 10_000)`.
-        :param batch_size: The batch size. Defaults to `64`.
-        :param num_workers: The number of workers. Defaults to `0`.
-        :param pin_memory: Whether to pin memory. Defaults to `False`.
-        """
         super().__init__()
         self.data_dir = data_dir
         self.num_workers = num_workers
@@ -68,10 +60,6 @@ class PlantDataModule(LightningDataModule):
 
     @property
     def num_classes(self) -> int:
-        """Get the number of classes.
-
-        :return: The number of MNIST classes (10).
-        """
         return 8
 
     # def prepare_data(self) -> None:
@@ -87,15 +75,6 @@ class PlantDataModule(LightningDataModule):
     #     # MNIST(self.hparams.data_dir, train=False, download=True)
 
     def setup(self, stage: Optional[str] = None) -> None:
-        """Load data. Set variables: `self.data_train`, `self.data_val`, `self.data_test`.
-
-        This method is called by Lightning before `trainer.fit()`, `trainer.validate()`, `trainer.test()`, and
-        `trainer.predict()`, so be careful not to execute things like random split twice! Also, it is called after
-        `self.prepare_data()` and there is a barrier in between which ensures that all the processes proceed to
-        `self.setup()` once the data is prepared and available for use.
-
-        :param stage: The stage to setup. Either `"fit"`, `"validate"`, `"test"`, or `"predict"`. Defaults to ``None``.
-        """
         self.data_train = PlantDataset(data_dir=os.path.join(self.data_dir, 'train-test-splitted', 'train'), transform=self.transforms_train)
         self.data_test = PlantDataset(data_dir=os.path.join(self.data_dir, 'train-test-splitted', 'test'), transform=self.transforms_test)
         self.data_val = PlantDataset(data_dir=os.path.join(self.data_dir, 'train-test-splitted', 'val'), transform=self.transform_val)
